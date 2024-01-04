@@ -1,0 +1,763 @@
+/* Reset and Base Styles */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    scroll-behavior: smooth;
+    font-family: 'Roboto', sans-serif;
+}
+
+:root {
+    --primary: #FF8FAB;
+    --secondary: #FFB3C6;
+    --light: #FFC2D1;
+}
+.form-select {
+    width: calc(100% - 60px);
+    padding: 10px; /* Padding inside the dropdown */
+    border: 1px solid #ccc; /* Border color */
+    border-radius: 4px; /* Rounded corners */
+    height: 40px; /* Matching height with other inputs */
+    -webkit-appearance: none; /* Removes default style for Chrome and Safari */
+    -moz-appearance: none; /* Removes default style for Firefox */
+    appearance: none; /* Removes default style */
+
+    background-size: 12px; /* Size of the custom arrow */
+    padding-right: 15px; /* Padding-right to prevent text overlap with arrow */
+  }
+  .form-select:focus {
+    border-color: var(--primary); /* Highlight color when focused */
+    outline: none; /* Remove the default focus outline */
+  }
+  
+  /* If you want to style the options */
+  .form-select option {
+    padding: 10px; /* Optional: if you want to style the dropdown options */
+  }
+  
+/* Featured Section */
+.featured {
+    width: 100%;
+    height: 60vh;
+    z-index: -9;
+    background: url('/public/img.png');
+    background-size: cover;
+    background-position: top;
+    position: relative;
+}
+.product-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .priceHP {
+    color: var(--primary);
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+.featured-text {
+    max-width: 500px;
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    text-align: center;
+    padding: 10px;
+    font-size: 2rem;
+}
+
+/* Latest Products */
+.latest {
+    padding: 50px 100px;
+}
+
+.product-intro {
+    text-align: center;
+}
+
+.product-intro h1 {
+    color: var(--primary);
+    letter-spacing: 0.2rem;
+    font-size: 2rem;
+    font-weight: bolder;
+}
+
+.product-intro h1 span {
+    color: var(--light);
+}
+
+.product-intro p {
+    color: grey;
+    margin: 15px 0px;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* This will align items to the start */
+    align-items: flex-start;
+    gap: 1rem; /* Add some gap between the cards */
+    margin: 4rem 0;
+}
+
+.card-container .card {
+    flex: 0 0 calc(25% - 1rem); /* Adjust the 1rem to account for the gap */
+    margin-bottom: 1rem; /* Add bottom margin for spacing between rows */
+    /* You may not need padding here if you're using gap, but it depends on your design */
+}
+
+
+
+  
+
+.card img {
+    width: 100%;
+    transition: 0.5s ease-in-out;
+}
+/* Add this to your homepage.css */
+.main-content-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* This makes sure your content takes minimum full viewport height */
+    justify-content: space-between; /* This pushes the footer to the bottom */
+  }
+  
+.card i {
+    color: goldenrod;
+    margin: 10px 0px;
+}
+
+.card button {
+    color: white;
+    background-color: var(--secondary);
+    border: none;
+    outline: none;
+    margin-top: 15px;
+    padding: 5px 20px;
+}
+
+.card:hover img, .card:hover h1 {
+    width: 80%;
+    color: var(--primary);
+}
+
+.card::before {
+    content: '20% off';
+    width: 25%;
+    height: 20px;
+    line-height: 25px;
+    color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--primary);
+    padding: 0px 4px;
+    transform: rotate(-20deg);
+}
+
+/* Trends Section */
+.trends {
+    padding: 50px 100px;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.trends .swiper {
+    width: 100%;
+    padding: 50px;
+}
+
+.trends .swiper-slide {
+    background-position: center;
+    background-size: cover;
+    width: 300px;
+    height: 300px;
+}
+
+.trends .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+#sidenav{
+    display: none;
+}
+#menubar{
+    display: none;
+}
+.modal-two {
+    border: 1px solid;
+    border-radius: 5px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    z-index: 1000;
+}
+
+/* Add more styling as needed */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+  }
+
+  .modal-content {
+    position: relative;
+    background-color: var(--primary);
+    margin: 10% auto;
+    padding: 0;
+    border: none;
+    width:100%;
+    max-width: 800px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    animation-name: modalOpen;
+    animation-duration: 0.4s;
+  }
+
+  .close {
+    position: absolute;
+    top: 10px;  /* Adjust as needed */
+    right: 10px;
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    z-index: 101; 
+
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    height: 400px;
+    overflow: hidden;
+    
+  }
+
+  .panel {
+    padding: 30px;
+    flex: 1 1 50%; /* Equal flex grow, shrink and basis */
+    width: 50%;
+    transform: translateX(0);
+    transition: transform 0.6s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0 10px 10px 0;
+    overflow: hidden; /* to hide the sliding content initially */
+
+  }
+
+  .left-panel {
+    background: #fff;
+    text-align: center;
+    border-radius: 10px 0 0 10px;
+  }
+
+  .right-panel {
+    padding: 10px 0px;
+      
+    background: var(--primary);
+    color: white;
+    position: relative;
+    text-align: center;
+  }
+
+
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  textarea {
+      width: calc(100% - 60px);
+      padding: 15px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      background: #f6f6f6;
+      border-radius: 20px;
+  }
+
+  button {
+    background-color: var(--light);
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: calc(100% - 60px);
+    border-radius: 20px;
+  }
+
+  button:hover {
+    opacity: 0.9;
+  }
+
+  .move-left {
+    transform: translateX(-150%);
+  }
+
+  /* .move-right {
+    transform: translateX(-100%);
+  } */
+
+  /* State when the register form is shown */
+  .register-form {
+    display: none; /* Start with register form hidden */
+    transform: translateX(100%); /* Positioned off-screen to the right */
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    will-change: transform, opacity; /* Optimizes the animation for transform and opacity */
+    opacity: 0; /* Start with register form fully transparent */
+}
+
+
+/* State when the register form is transitioning into view */
+.register-form.full-space {
+    display: block; /* Set to block to make it visible before starting the animation */
+    opacity: 1; /* Transition to fully opaque */
+    transform: translateX(0); /* Move into place */
+}
+
+#searchBox{
+display: flex;
+width: 100%;
+justify-content: center;
+align-items: center;
+}
+#searchInput {
+    display: flex;
+    width: 50%;
+    margin: 10px;
+    justify-content: center;
+    align-items: center;
+}
+#searchBox button{
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+
+}
+#searchBox button i {
+    color: white;
+    font-size: 18px;
+
+}
+/* Regular styles for other list items */
+.nav3 ul li {
+    display: inline-block;
+    /* Other styles */
+}
+
+/* General Modal Styling */
+.modal-md {
+    width: 50%; 
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 1000; /* Ensure it's above other content */
+}
+.product-modify-fields{
+    display: flex;
+    flex-flow: column ;
+    width: 100%;
+ 
+
+}
+.product{
+    text-align:center;
+}
+
+/* Form and Elements Styling */
+.modal-md form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-md form select,
+.modal-md form button {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.modal-md form button {
+    background-color: var(--primary);
+    color: white;
+    cursor: pointer;
+}
+
+.modal-md form button:hover {
+    background-color: var(--primary);
+}
+
+.modal-md form button[type="button"] {
+    background-color: var(--secondary);
+}
+
+.modal-md form button[type="button"]:hover {
+    background-color: var(--light);
+}
+
+/* Cancel Button */
+.modal-md form .cancel-button {
+    background-color: var(--light);
+}
+
+.modal-md form .cancel-button:hover {
+    background-color: var(--light);
+}
+/* homepage.css */
+
+/* Ensure the swiper container does not have extra padding or margins */
+.swiper-container {
+    padding: 0;
+    margin: 0;
+    overflow: hidden; /* Prevents content from overflowing */
+}
+
+/* Make sure the swiper-wrapper does not exceed the viewport width */
+.mySwiper {
+    max-width: 100vw;
+    box-sizing: border-box; /* Includes padding and border in the element's total width */
+}
+
+/* Wrap the Swiper in a container that restricts its width and handles overflow */
+.content-wrapper {
+    width: 100%; /* Full width of the parent element */
+    overflow-x: hidden; /* Prevents horizontal overflow */
+}
+
+/* Optional: Add media query for responsiveness */
+@media (max-width: 768px) {
+    .card-container .card {
+        flex: 0 0 calc(50% - 1rem); /* 2 cards per row on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .card-container .card {
+        flex: 0 0 calc(100% - 1rem); /* 1 card per row on very small screens */
+    }
+}
+@keyframes slideInFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(100px);
+    }
+}
+  @keyframes modalOpen {
+    from {top: -300px; opacity: 0}
+    to {top: 10%; opacity: 1}
+  }
+  
+@media only screen and (max-width:769px){
+    .nav1 {
+        
+        position: relative;
+        z-index: 2;
+        background-color: white;
+    }
+    .right i {
+        font-size: 15px;
+        margin: 0px 5px;
+    }
+
+
+    .nav2 {
+        width: 100%;
+        height: 80px;
+    }
+
+
+
+
+.nav2 .nav2-left i {
+    margin-left: 0px;
+}
+
+.nav2 .nav2-center h1 {
+
+    font: 1.5rem;
+    letter-spacing: 2px;
+
+}
+
+
+.nav2 .nav2-center p {
+    color: grey;
+    font-size: 10px;
+    margin-top: 5px;
+}
+
+.nav2 .nav2-right i {
+    margin: 0 5px;
+}
+.nav3{
+    display: none;
+}
+    
+    .latest {
+        padding: 0px 50px;
+    }
+    
+    .product-intro {
+        text-align: center;
+    }
+    
+    .product-intro h1 {
+        color: var(--primary);
+        letter-spacing: 0.2rem;
+        font-size: 2rem;
+        font-weight: bolder;
+    }
+    
+    .product-intro h1 span {
+        color: var(--light);
+    }
+    
+    .product-intro p {
+        color: grey;
+        margin: 15px 0px;
+    }
+    
+    .card-container {
+        
+        margin: 2rem 0;
+    }
+    
+    .card-container .card {
+        flex-basis: 100%;
+        padding: 0.8rem;
+        position: relative;
+        text-align: center;
+    }
+    
+    .card img {
+        width: 100%;
+        transition: 0.5s ease-in-out;
+    }
+    
+    .card i {
+        color: goldenrod;
+        margin: 10px 0px;
+    }
+    
+    .card button {
+        color: white;
+        background-color: var(--secondary);
+        border: none;
+        outline: none;
+        margin-top: 15px;
+        padding: 5px 20px;
+    }
+    footer div {
+        flex-basis: 50%;
+        margin: 10px 0px;
+    }
+    #sidenav{
+        display: block;
+    }
+    #menubar{
+        display: block;
+        position: absolute;
+        top: 50%;
+        right: 0%;
+        transform: translate(0%,-50%);
+        z-index: 99;
+        background-color: var(--primary);
+        color: white;
+        font-size: 2rem;
+        padding: 20px 10px;
+        animation: animate 5s    ease infinite;
+    }
+    @keyframes animate {
+        0%{
+            background-color: var(--secondary);
+        }
+        100%{
+            background-color: var(--primary);
+        }
+        
+    }
+    #sidenav {
+        width: 0px;
+        height: 100vh;
+       
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 3;
+        background-color: var(--light);
+        padding-top: 70px;
+        display: block;
+        overflow: hidden;
+        transition: 0.5s ease-in-out;
+    }
+    
+    #sidenav ul {
+        list-style: none;
+    }
+    
+    #sidenav ul li {
+        display: block;
+        width: 200px;
+        position: relative;
+        z-index: 99;
+        margin: 10px 20px;
+    }
+    
+    #sidenav ul li a {
+        text-decoration: none;
+        color: black;
+        font-weight: 500;
+        display: block;
+        font-size: 20px;
+        padding: 10px 20px;
+    }
+    
+    #sidenav ul li a:hover {
+        color: var(--primary);
+    }
+    
+    #sidenav ul li i {
+        color: var(--primary);
+        margin: 0px 5px;
+    }
+    
+    #sidenav ul ul {
+        position: absolute;
+        top: 70px;
+        left: 0;
+        display: none;
+    }
+    
+    #sidenav ul ul li {
+        
+        border-bottom: 1px solid var(--primary);
+    }
+    
+    #sidenav ul li:hover > ul {
+        display: block;
+    }
+}
+/* Tablets and Small Desktops */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+    .featured-text, .product-intro h1, .trends .swiper-slide {
+        font-size: 1.5rem; /* Adjust font size */
+    }
+
+    .card-container .card {
+        flex-basis: 30%; /* Adjust card width */
+    }
+}
+
+/* Landscape Phones to Tablets */
+@media only screen and (max-width: 767px) {
+    .nav1, .nav2 {
+        flex-direction: column; /* Stack nav items */
+    }
+
+    .nav2 .nav2-center h1 {
+        font-size: 1.2rem; /* Adjust font size */
+    }
+
+    .nav3 ul li {
+        width: 100%; /* Full width for nav items */
+    }
+
+    .featured {
+        height: 40vh; /* Adjust height */
+    }
+
+    .featured-text {
+        font-size: 1.2rem; /* Adjust font size */
+        top: 40%;
+        left: 5%;
+        right: 5%;
+    }
+
+    .card-container {
+        flex-direction: column; /* Stack cards */
+    }
+
+    .card-container .card {
+        flex-basis: 100%; /* Full width for cards */
+    }
+
+    .trends .swiper-slide {
+        width: 100%; /* Full width for slides */
+    }
+
+    footer div {
+        flex-basis: 100%; /* Full width for footer columns */
+    }
+}
+
+/* Phones */
+@media only screen and (max-width: 480px) {
+    .nav1, .nav2, .nav3 {
+        display: none; /* Hide navigation bars */
+    }
+
+    #menubar {
+        display: block; /* Show menu bar */
+    }
+
+    #sidenav {
+        width: 250px; /* Adjust side nav width */
+    }
+
+    .featured-text {
+        font-size: 1rem; /* Adjust font size */
+    }
+
+    .product-intro h1, .trends .swiper-slide {
+        font-size: 1rem; /* Adjust font size */
+    }
+
+    .latest, .trends {
+        padding: 20px; /* Adjust padding */
+    }
+
+    .card-container .card {
+        margin-bottom: 20px; /* Adjust margin */
+    }
+}

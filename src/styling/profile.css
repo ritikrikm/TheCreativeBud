@@ -1,0 +1,111 @@
+.user-home-page {
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 20px;   
+  }
+
+  :root {
+    --primary: #FF8FAB;
+    --secondary: #FFB3C6;
+    --light: #FFC2D1;
+}
+
+  .menu-section {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    padding: 20px;
+    background-color: rgb(251,247,245);
+    
+  }
+  
+  .vertical-menu {
+    flex: 1;
+    max-width: 20%;
+    order: 0;
+    margin-right: 20px;   
+  }
+  
+  .vertical-menu ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .vertical-menu li {
+    margin-bottom: 10px;
+  }
+  
+  .vertical-menu a {
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 18px;
+    display: block;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid var(--light);
+    border-radius: 5px;
+    
+  }
+  
+  .vertical-menu a:hover {
+    background-color: var(--primary);
+    color: #fff;
+  }
+  
+  .user-profile {    
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: var(--primary);
+    width: 90%;
+    max-width: 800px;
+    background-color: white;   
+  }
+  
+  /* Add this to your stattionary.css or a global CSS file */
+.main-content-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* This ensures your content takes at least the full viewport height */
+  justify-content: space-between; /* This pushes the footer to the bottom */
+}
+
+  .user-profile h2 {
+    margin-bottom: 20px;
+    color: var(--primary);
+    text-align: center;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    color: rgb(192, 67, 87);
+    text-align: left;
+  }
+  
+  input,
+  select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgb(170, 8, 42);
+    border-radius: 5px;
+    background-color: white;
+    color: rgb(170, 8, 42);
+  }
+  
+  input[readonly],
+  select[readonly] {
+    background-color: #f7f7f7; /* Lighter white */
+    cursor: not-allowed;
+  }
+  
+  
+  
+
+  
+  

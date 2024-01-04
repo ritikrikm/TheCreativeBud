@@ -1,0 +1,53 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  scroll-behavior: smooth;
+  font-family: 'Roboto', sans-serif;
+}
+
+:root {
+  --primary: #FF8FAB;
+  --secondary: #FFB3C6;
+  --light: #FFC2D1;
+}
+/* Add this to your stattionary.css or a global CSS file */
+.main-content-container-sp {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* This ensures your content takes at least the full viewport height */
+    justify-content: space-between; /* This pushes the footer to the bottom */
+  }
+
+.product-intro {
+  text-align: center;
+}
+
+
+#content-h {
+  color: var(--primary);
+  justify-content: center;
+  text-align: center;
+  letter-spacing: 0.2rem;
+  font-size: 2rem;
+  font-weight: bolder;
+}
+
+#content-h span {
+  color: var(--light);
+}
+  .modal-stationary {
+    border: 1px solid;
+    border-radius: 5px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    z-index: 1000;
+
+    }

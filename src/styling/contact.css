@@ -1,0 +1,77 @@
+.user-profile .form-group {
+    margin-bottom: 20px; /* Adjust the spacing as needed */
+  }
+  :root {
+    --primary: #FF8FAB;
+    --secondary: #FFB3C6;
+    --light: #FFC2D1;
+}
+  .user-profile input[type="email"],
+  .user-profile input[type="tel"],
+  .user-profile select,
+  .user-profile textarea {
+    width: calc(100% - 60px);
+
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    background: #f6f6f6;
+    border-radius: 20px;
+  }
+  
+  .user-profile input[type="email"]:focus,
+  .user-profile input[type="tel"]:focus,
+  .user-profile select:focus,
+  .user-profile textarea:focus {
+    border-color: var(--primary); /* Highlight color when the input is focused */
+  }
+  
+  .user-profile .error {
+    color: var(--secondary); /* Error text color */
+    font-size: 0.8em; /* Adjust the font size as needed */
+    margin-top: 5px; /* Spacing between error message and input */
+  }
+  
+  /* Additional styles to make it more uniform with the design */
+  .user-profile button {
+    padding: 10px 20px;
+    background-color: var(--primary); /* Adjust button color as needed */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+  }
+  
+  .user-profile button:hover {
+    background-color: var(--secondary); /* Darker shade for hover effect */
+  }
+  
+  /* If using asteriskColor class elsewhere, ensure it's defined */
+  .asteriskColor {
+    color: var(--primary);
+  }
+  
+  /* Style the dropdown arrow */
+  .user-profile select {
+    -webkit-appearance: none; /* Removes default chrome and safari style */
+    -moz-appearance: none;    /* Removes default style Firefox */
+    appearance: none;         /* Removes default style */
+    /* background: url('dropdown-arrow.png') no-repeat right; Add your own arrow image */
+    background-size: 12px; /* Size of the background image */
+    padding-right: 15px; /* Make space for the image */
+  }
+  
+  /* You might need to adjust the height if you have specific height on other inputs */
+  .user-profile input[type="email"],
+  .user-profile input[type="tel"],
+  .user-profile select,
+  .user-profile textarea {
+    height: 40px; /* Adjust to match the height of other inputs */
+  }
+  .user-profile .error {
+    color: var(--primary);
+    font-size: 0.8em;
+    margin-top: 5px;
+    }
+  /* Ensure that you have a class or id for your form to avoid affecting other elements */
+  

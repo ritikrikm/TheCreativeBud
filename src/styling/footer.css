@@ -1,0 +1,62 @@
+/* Reset and Base Styles */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+.black-link a{
+    color: white;
+}
+body {
+    scroll-behavior: smooth;
+    font-family: 'Roboto', sans-serif;
+    min-height: 100vh; /* Set the body to at least the height of the viewport */
+    display: flex;
+    flex-direction: column; /* Make the body a flex container */
+}
+#designer{
+    color: white;
+}
+:root {
+    --primary: #FF8FAB;
+    --secondary: #FFB3C6;
+    --light: #FFC2D1;
+}
+
+main {
+    flex-grow: 1; /* Allow the main content to grow and push the footer to the bottom */
+}
+
+footer {
+    background-color: var(--secondary);
+    color: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+    width: 100%;
+    z-index: 1000;
+}
+
+footer div {
+    flex-basis: 30%;
+}
+
+footer h1 {
+    letter-spacing: 0.5rem;
+}
+
+footer h1 span {
+    color: var(--primary);
+}
+
+footer p {
+    font-size: 1rem;
+}
+
+footer i {
+    margin: 0px 5px;
+}

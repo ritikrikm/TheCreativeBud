@@ -1,0 +1,27 @@
+
+  .address-box {
+    border: 1px solid #ccc; /* Box border */
+    padding: 20px; /* Inner spacing */
+    margin-top: 20px;
+    border-radius: 10px;
+    
+    background-color: #f9f9f9; /* Light background for the box */
+  }
+  
+  .row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .column {
+    flex: 1;
+    padding: 0 10px;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+  }
+  

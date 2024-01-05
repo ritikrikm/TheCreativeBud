@@ -25,6 +25,7 @@ export const UserProvider = ({ children }) => {
                     const userInfo = snapshot.val();
                     if (userInfo) {
                         setAdditionalUserInfo(userInfo);
+                        console.log(userInfo);
                     }
                 }, {
                     onlyOnce: true

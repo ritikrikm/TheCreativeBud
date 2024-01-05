@@ -1,6 +1,6 @@
 // Profile.js
 import React, { useState, useEffect } from "react";
-
+import AdminPanel from "./adminPanel/adminPanel";
 import Header from './Header'; // Import Header component
 import Footer from './Footer'; // Import Footer component
 import { ref, onValue } from 'firebase/database';
@@ -10,18 +10,21 @@ import OrderProfile from "./orderprofile";
 import VerticalMenu from "./verticalmenu";
 import { UserContext } from './UserContext';
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styling/profile.css'
 import ContactUs from "./ContactUs";
 import { database } from '../firebase'; // Adjust the path as necessary
 
 function Profile() {
   const [orders, setOrders] = useState([]);
+  const navigate = useNavigate(); // Hook for navigation
 
  
 
   const [openModal, setOpenModal] = useState(null);
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isAdminPanel, setisAdminPanel] = useState(false);
 
 
   const [isUpdateProfile, setIsUpdateProfile] = useState(false);
@@ -34,22 +37,24 @@ function Profile() {
   const uid = currentUser ? currentUser.uid : null;
   const name = additionalUserInfo ? additionalUserInfo.name : '';
   const role = additionalUserInfo ? additionalUserInfo.role : '';
-
+  useEffect(() => {
+    // Redirect to Home if not logged in
+    if (!currentUser) {
+      navigate("/", { replace: true }); // Redirects to Home page
+    }
+    // Other useEffect code
+  }, [currentUser, navigate]);
   const checkIfAdmin = () => {
     return role === 'admin';
   };
-console.log("HELLO"+uid);
+
   useEffect(() => {
 
-
-const checkIfAdmin = () => {
-  return role === 'admin';
-};
     setIsProfileOpen(true);
     setIsMyOrder(false);
     setIsUpdateProfile(false);
     setIsContactUs(false);
- 
+ setisAdminPanel(false);
   }, []);
   useEffect(() => {
     if (checkIfAdmin()) {
@@ -84,27 +89,39 @@ const checkIfAdmin = () => {
       setIsUpdateProfile(false)
       setIsMyOrder(false)
       setIsContactUs(false);
+      setisAdminPanel(false);
    
     } else if (link === "uprofile") {
       setIsUpdateProfile(true);
       setIsProfileOpen(false);
       setIsMyOrder(false);
       setIsContactUs(false);
-    
+      setisAdminPanel(false);
+      
     } else if (link === "orders") {
       setIsMyOrder(true);
       setIsUpdateProfile(false);
       setIsProfileOpen(false);
       setIsContactUs(false);
-    
+      setisAdminPanel(false);
     }else if (link === "contact") {
       setIsContactUs(true);
       setIsMyOrder(false);
       setIsUpdateProfile(false);
       setIsProfileOpen(false);
+      setisAdminPanel(false);
+    
+    }
+    else if (link === "adminPage") {
+      setisAdminPanel(true);
+      setIsContactUs(false);
+      setIsMyOrder(false);
+      setIsUpdateProfile(false);
+      setIsProfileOpen(false);
  
     
-    }  else {
+    }
+    else {
 
       setOpenModal(link);
       setIsProfileOpen(false);
@@ -121,6 +138,10 @@ const checkIfAdmin = () => {
   const closeisContactModal = () => {
     setIsContactUs(false);
   };
+  const closeisAdminModal = () => {
+    setisAdminPanel(false);
+  };
+  
   const closeOrderModal = () => {
     setIsMyOrder(false);
   };
@@ -129,7 +150,7 @@ const checkIfAdmin = () => {
   const isAdmin = currentUser && role === 'admin';
 
   const isStudent = currentUser && role === 'user';
-console.log(isStudent);
+
   const menuItems = [
   { id: "profile", label: "Profile" },
   // { 
@@ -146,7 +167,11 @@ console.log(isStudent);
   { id: "contact", label: "Contact Us",
 
   },
- 
+  { 
+    id: "adminPage", 
+    label: "Admin Panel", 
+    hidden: role !== 'admin' // Hide this item if the user is not an admin
+  },
 ];
 
 
@@ -184,12 +209,19 @@ console.log(isStudent);
             onClose={closeOrderModal}
             username={name}
             profileData={profileData}
-            checkIfAdmin={checkIfAdmin}
+
        
           />}
            {isContactUs && <ContactUs
             isContactUs={isContactUs}
             onClose={closeisContactModal}
+            username={name}
+            profileData={profileData}
+            uid = {uid}
+          />}
+             {isAdminPanel && <AdminPanel
+            isAdminPanel={isAdminPanel}
+            onClose={closeisAdminModal}
             username={name}
             profileData={profileData}
             uid = {uid}

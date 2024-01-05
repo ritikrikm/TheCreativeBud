@@ -68,7 +68,52 @@
   .order-item button:hover {
     background-color: #C7442A;
   }
-  
+  /* Popup Styles */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.5s;
+}
+#csH2{
+  color: black;
+}
+.popup-content {
+  background-color: var(--light);
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.popup-show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup-button {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.popup-button:hover {
+  background-color: var(--secondary);
+}
+
   /* Responsive adjustments */
   @media (max-width: 768px) {
     .product-item {

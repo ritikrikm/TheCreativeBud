@@ -61,6 +61,7 @@ function Header() {
       .then(() => {
         // Clear user data from local storage
         localStorage.removeItem("user");
+        navigate('/'); 
         window.location.reload();
         // Set the user name to null
         // setUserName(null);

@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import '../styling/profile.css'
 import ContactUs from "./ContactUs";
 import { database } from '../firebase'; // Adjust the path as necessary
-
+import { Helmet } from 'react-helmet';
 function Profile() {
   const [orders, setOrders] = useState([]);
   const navigate = useNavigate(); // Hook for navigation
@@ -179,6 +179,10 @@ function Profile() {
   return (
 
     <>
+    <Helmet>
+    <meta name="description" content="Manage your profile at TheCreativeBud. View your order history, update your preferences, and personalize your shopping experience." />
+</Helmet>
+
     <div className="main-content-container"> {/* Add this wrapper around your content */}
     <Header></Header>
     <div className="user-home-page">

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import '../styling/contact.css'
 import { getDatabase, ref, get } from "firebase/database";
 import emailjs from "emailjs-com"; 
-
+import { Helmet } from 'react-helmet';
 const ContactUs = ({ onClose, uid }) => {
 
   const [email, setEmail] = useState("");
@@ -105,7 +105,12 @@ const ContactUs = ({ onClose, uid }) => {
   };
 
   return (
+    
     <div className="user-profile">
+      <Helmet>
+    <meta name="description" content="Get in touch with TheCreativeBud for any queries or support. We are here to help you with your orders, feedback, or any questions you might have." />
+</Helmet>
+
       <h2>Enquiry Form</h2>
       <form>
         <div className="form-group">

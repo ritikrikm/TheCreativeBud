@@ -27,7 +27,7 @@ import { RingLoader } from "react-spinners";
 
 import Header from "./Header"; // Import Header component
 import Footer from "./Footer"; // Import Footer component
-
+import { Helmet } from 'react-helmet';
 function HomePage() {
   // In your product listing component
 
@@ -317,6 +317,9 @@ function HomePage() {
 
   return (
     <div>
+      <Helmet>
+    <meta name="description" content="Discover unique and creative products at TheCreativeBud. Explore our latest collections of handcrafted items, perfect for adding a touch of creativity to your life." />
+</Helmet>
       <div className="main-content-container">
         {" "}
         {/* Add this wrapper around your content */}

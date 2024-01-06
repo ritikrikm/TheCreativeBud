@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from './UserContext';
 import Header from './Header';
 import Footer from './Footer';
-
+import imageCompression from 'browser-image-compression';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 function CommonPage({ databasePath, storagePath, pageTitle }) {
   const [newProduct, setNewProduct] = useState({ name: '', desc: '', photo: '', price: '' });
@@ -20,7 +21,7 @@ function CommonPage({ databasePath, storagePath, pageTitle }) {
   const { currentUser, additionalUserInfo } = useContext(UserContext);
   const navigate = useNavigate();
   const isAdmin = currentUser && additionalUserInfo?.role === 'admin';
-
+console.log("HI"+isAdmin);
   useEffect(() => {
     console.log(databasePath);
     console.log(storagePath);
@@ -42,14 +43,32 @@ function CommonPage({ databasePath, storagePath, pageTitle }) {
   };
 
   const handleFileUpload = async (file, productId) => {
-    if (!file) return null;
-    const storage = getStorage();
-    const storageLocation = storageRef(storage, `${storagePath}/${productId}`);
+    if (!file) {
+      console.error("No file provided for upload.");
+      return null;
+    }
+    let compressedFile; 
+    // Image compression options
+    const options = {
+      maxSizeMB: 1, // (Max file size in MB)
+      maxWidthOrHeight: 1920, // (Compressed file max width or height)
+      useWebWorker: true
+    };
+
     try {
-      await uploadBytes(storageLocation, file);
+       compressedFile = await imageCompression(file, options);
+    } catch (compressionError) {
+      console.error("Error compressing the file:", compressionError);
+      return null;
+    }
+
+    try {
+      const storage = getStorage();
+      const storageLocation = storageRef(storage, `${storagePath}/${productId}`);
+      await uploadBytes(storageLocation, compressedFile);
       return await getDownloadURL(storageLocation);
-    } catch (error) {
-      console.error("Error uploading file:", error);
+    } catch (uploadError) {
+      console.error("Error uploading file:", uploadError);
       return null;
     }
   };
@@ -220,28 +239,36 @@ const handleSaveChanges = async () => {
       
     </div>
     <div className="card-container">
-            {products.map((product) => (
-              <div
-                className="card"
-                key={product.id}
-            
-               onClick={() => navigate(`/category/${databasePath}/${product.id}`)}
-              >
-                <div>
-                  <img
-                    src={
-                      product.photo !== "null" ? product.photo : "./imgna.png"
-                    }
-                    alt={product.name}
-                  />
-                </div>
-                <h1>{product.name}</h1>
-                <p className="product-description">{product.desc}</p>
-                <p className="priceHP">{product.price} INR</p>
-                
-             
+    {products.length === 0 ? (
+              <div className="no-products-message">
+                We are on this!
               </div>
-            ))}
+            ) :(
+              products.map((product) => (
+                <div
+                  className="card"
+                  key={product.id}
+              
+                 onClick={() => navigate(`/category/${databasePath}/${product.id}`)}
+                >
+                 <div>
+        <LazyLoadImage
+          src={product.photo !== "null" ? product.photo : "./imgna.png"}
+          alt={product.name}
+          effect="blur"
+        />
+      </div>
+                  <h1>{product.name}</h1>
+                  <p className="product-description">{product.desc}</p>
+                  {pageTitle !== 'Offers' && (
+        <p className="priceHP">{product.price} INR</p>
+      )}
+                  
+               
+                </div>
+              ))
+            )}
+            
 
             {showModal && (
               <div className="modal-two">

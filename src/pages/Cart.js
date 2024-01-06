@@ -7,7 +7,7 @@ import  loadRazorpay  from './loadRazorpay';
 import  createOrder  from './razorpayUtils'; 
 import { database } from '../firebase'; // Existing import
 import { ref, set, remove } from 'firebase/database';
-
+import { Helmet } from 'react-helmet';
 
 
 const Cart = () => {
@@ -98,7 +98,12 @@ const Cart = () => {
   
   
   return (
+
     <div className="main-content-container">
+      <Helmet>
+    <meta name="description" content="View your shopping cart at TheCreativeBud. Easily manage the items you're planning to purchase, update quantities, or proceed to checkout." />
+</Helmet>
+
       <Header />
       <div className="cart">
         <h2>Shopping Cart</h2>

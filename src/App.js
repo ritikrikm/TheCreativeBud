@@ -33,7 +33,6 @@ function App() {
                 <Route path="/accessories/pendants" element={<Pendants />} />
                 <Route path="/accessories/keychains" element={<Keychains />} />
                 <Route path="/cart" element={<Cart />} />
-                <Route path="/razorpay-test" element={<RazorpayTest/>} />
               </Routes>           
             </CartProvider>
           </AuthProvider> 

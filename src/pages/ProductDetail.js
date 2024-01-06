@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import '../styling/cart.css'
 import { CartContext } from './CartProvider';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { Helmet } from 'react-helmet';
 function ProductDetail() {
   const { categoryType, productId } = useParams();
   const { cartItems, addToCart } = useContext(CartContext);
@@ -115,10 +116,17 @@ function ProductDetail() {
   console.log(product.photo);
   return (
     <>
+    <Helmet>
+    <meta name="description" content="Explore detailed information about our unique products at TheCreativeBud. Learn more about product specifications, customer reviews, and pricing." />
+</Helmet>
+
       <div className="main-content-container">
         <Header />
         <main className="product-detail-container">
-          <button className="back-button" onClick={handleBack}>← Back to products</button>
+           <button className="back-button" onClick={handleBack}>
+    {/* Conditionally render the button text */}
+    {categoryType === 'offers' ? 'Back to Offers' : '← Back to products'}
+  </button>
           <div className="product-card">
           {product.photo && product.photo !== 'null' ? (
             <img src={product.photo} alt={product.name} />
@@ -129,9 +137,11 @@ function ProductDetail() {
           <div className="product-info">
             <h1 className="product-title">{product.name}</h1>
             <p className="product-descriptionDetail">{product.desc}</p>
-            <p className="price">{product.price} INR</p>
-            {/* <button className="add-to-cart-btn">Add to Cart</button> */}
-            <div className="demo" onClick={handleDivClick}>
+            {categoryType !== 'offers' && (
+      <>
+        <p className="price">{product.price} INR</p>
+      
+        <div className="demo" onClick={handleDivClick}>
       <div className="demo__drone-cont demo__drone-cont--takeoff">
         <div className="demo__drone-cont demo__drone-cont--shift-x">
           <div className="demo__drone-cont demo__drone-cont--landing">
@@ -176,6 +186,11 @@ function ProductDetail() {
       
      
     </div>
+        
+      </>
+    )}
+          
+           
           </div>
         </main>
         <Footer />

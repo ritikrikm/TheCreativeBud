@@ -118,6 +118,7 @@ body {
 .card img {
     width: 100%;
     transition: 0.5s ease-in-out;
+    height: auto;
 }
 /* Add this to your homepage.css */
 .main-content-container {

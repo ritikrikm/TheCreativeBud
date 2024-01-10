@@ -169,23 +169,24 @@ const OrderProfile = () => {
       )}
 
 {selectedOrderId && (
-            <div>
-              {/* Assuming selectedOrder is defined similarly to the admin section */}
-              {orders.find(order => order.orderId === selectedOrderId).products.map((product, index) => (
-                <div key={index} className="product-item">
-                  <img src={product.photo} alt={product.name} className="product-image" />
-                  <div className="product-details">
-                    <h3>{product.name}</h3>
-                    <p>Description: {product.desc}</p>
-                    <p>Quantity: {product.quantity}</p>
-                    <p className="product-price">Price: {product.price}</p>
-                  </div>
-                </div>
-              ))}
-              <p className="subtotal">Subtotal: {orders.find(order => order.orderId === selectedOrderId).total}</p>
-              <button onClick={handleStatusClick}>Get Status</button>
-            </div>
-      )}
+  <div>
+    {orders.find(order => order.orderId === selectedOrderId).products.map((product, index) => (
+      <div key={index} className="product-item">
+        {product.photos && product.photos.length > 0 && (
+          <img src={product.photos[0]} alt={product.name} className="product-image" />
+        )}
+        <div className="product-details">
+          <h3>{product.name}</h3>
+          <p>Description: {product.desc}</p>
+          <p>Quantity: {product.quantity}</p>
+          <p className="product-price">Price: {product.price}</p>
+        </div>
+      </div>
+    ))}
+    <p className="subtotal">Subtotal: {orders.find(order => order.orderId === selectedOrderId).total}</p>
+    <button onClick={handleStatusClick}>Get Status</button>
+  </div>
+)}
        {showStatusPopup && (
         <div className={`popup-overlay ${showStatusPopup ? 'popup-show' : ''}`}>
           <div className="popup-content">

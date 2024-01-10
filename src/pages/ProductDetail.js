@@ -11,6 +11,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Helmet } from 'react-helmet';
 function ProductDetail() {
   const { categoryType, productId } = useParams();
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const { cartItems, addToCart } = useContext(CartContext);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -53,6 +54,11 @@ function ProductDetail() {
       // Show confirmation dialog
       setShowConfirmDialog(true);
     } else {
+       // Create a new product object with only the first photo
+       const productToAdd = {
+        ...product,
+        photos: product.photos.length > 0 ? [product.photos[0]] : []
+    };
       // Directly add to cart if not already in cart
       addToCart(product);
     }
@@ -80,7 +86,18 @@ function ProductDetail() {
   if (error) {
     return <div>Error: {error}</div>;
   }
-
+  const handleNextPhoto = () => {
+    setCurrentPhotoIndex((prevIndex) => 
+      prevIndex === product.photos.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+  
+  const handlePrevPhoto = () => {
+    setCurrentPhotoIndex((prevIndex) => 
+      prevIndex === 0 ? product.photos.length - 1 : prevIndex - 1
+    );
+  };
+  
   const handleDivClick = () => {
     if (processing) return;
     if (!isLoggedIn) {
@@ -127,13 +144,26 @@ function ProductDetail() {
     {/* Conditionally render the button text */}
     {categoryType === 'offers' ? 'Back to Offers' : '← Back to products'}
   </button>
-          <div className="product-card">
-          {product.photo && product.photo !== 'null' ? (
-            <img src={product.photo} alt={product.name} />
-          ) : (
-            <img src="/imgna.png" alt="Default" />
-          )}
-        </div>
+              <div className="product-card">
+              {product.photos && product.photos.length > 0 ? (
+                <>
+                  <div className="product-photo-container">
+                    <img src={product.photos[currentPhotoIndex]} alt={product.name} />
+                  </div>
+                  {product.photos.length > 1 && (
+                    <div className="photo-navigation">
+                      <button onClick={handlePrevPhoto}>← Prev</button>
+                      <button onClick={handleNextPhoto}>Next →</button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="product-photo-container">
+                  <img src="/imgna.png" alt="Default" />
+                </div>
+              )}
+            </div>
+
           <div className="product-info">
             <h1 className="product-title">{product.name}</h1>
             <p className="product-descriptionDetail">{product.desc}</p>

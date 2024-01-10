@@ -14,9 +14,11 @@ import Earrings from './pages/Earrings';
 import Pendants from './pages/Pendants';
 import Keychains from './pages/Keychains';
 import Cart from './pages/Cart';
-import RazorpayTest from './Testing/RazorpayTest';
+
+
 function App() {
   return (
+
     <Router>  
       <Layout>
         <UserProvider>
@@ -39,6 +41,7 @@ function App() {
         </UserProvider>
       </Layout>     
     </Router>
+
   );
 }
 

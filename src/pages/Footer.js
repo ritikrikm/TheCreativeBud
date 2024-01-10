@@ -6,13 +6,11 @@ function Footer() {
     
     <footer>
     <div>
-      <h1>Prerna <span>Sharma</span></h1>
+      <h1>The<span>CreativeBud</span></h1>
       <p>One stop destination for all your creative needs</p>
     </div>
     <div clßassName="black-link" >
-    <a  href="https://www.instagram.com/thecreativebud/" rel="noopener noreferrer"  target="_blank">
-      <i className="fa fa-facebook" />
-        </a>
+
         <a href="https://www.instagram.com/thecreativebud/" rel="noopener noreferrer" target="_blank">
         <i className="fa fa-instagram" />
         </a>
@@ -28,6 +26,8 @@ function Footer() {
     </div>
     <div>
       <p>&copy; 2024: Copyright All rights reserverd</p>
+      <p>Terms and Condition </p>
+      <p>Privacy Policy</p>
     </div>
   </footer>
   );

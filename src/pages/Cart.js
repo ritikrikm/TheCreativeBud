@@ -112,33 +112,34 @@ const Cart = () => {
         ) : (
           <div>
             {cartItems.map((item) => (
-              <div className="cart-item" key={item.id}>
-                <div className="item-image">
-                  <img src={item.photo} alt={item.name} />
-                </div>
-                <div className="item-details">
-                  <h3>{item.name}</h3>
-                  <p className="item-price">₹{item.price}</p>
-                  <div className="item-actions">
-                    <div className="quantity-selector">
-                      Qty:
-                      <select
+    <div className="cart-item" key={item.id}>
+        <div className="item-image">
+            {/* Use the first photo from the photos array */}
+            <img src={item.photos && item.photos.length > 0 ? item.photos[0] : '/imgna.png'} alt={item.name} />
+        </div>
+        <div className="item-details">
+            <h3>{item.name}</h3>
+            <p className="item-price">₹{item.price}</p>
+            <div className="item-actions">
+                <div className="quantity-selector">
+                    Qty:
+                    <select
                         value={item.quantity}
                         onChange={(e) => handleQuantityChange(item, parseInt(e.target.value))}
-                      >
+                    >
                         {[...Array(10).keys()].map((x) => (
-                          <option key={x + 1} value={x + 1}>
-                            {x + 1}
-                          </option>
+                            <option key={x + 1} value={x + 1}>
+                                {x + 1}
+                            </option>
                         ))}
-                      </select>
-                    </div>
-                    <button className="delete-btn" onClick={() => handleRemoveItem(item.id)}>Delete</button>
-                    <button className="save-for-later-btn" onClick={() => handleSaveForLater(item)}>Save for later</button>
-                  </div>
+                    </select>
                 </div>
-              </div>
-            ))}
+                <button className="delete-btn" onClick={() => handleRemoveItem(item.id)}>Delete</button>
+                <button className="save-for-later-btn" onClick={() => handleSaveForLater(item)}>Save for later</button>
+            </div>
+        </div>
+    </div>
+))}
             <div className="cart-summary">
               <p>Subtotal ({cartItems.length} item{cartItems.length !== 1 && 's'}): ₹{calculateTotal()}</p>
                <button className="buy-now-btn" onClick={handleBuyNow}>Buy Now</button>

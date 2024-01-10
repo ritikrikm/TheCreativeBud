@@ -204,21 +204,27 @@ header {
 .card-container {
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap; /* This enables the wrapping behavior */
+    justify-content: flex-start;
     align-items: center;
     cursor: pointer;
     margin: 4rem 0;
 }
 
+
 .card-container .card {
     flex-basis: 20%;
     padding: 0.8rem;
     position: relative;
+    height: 100%; /* Make card take full height of container */
+    box-sizing: border-box; /* Include padding in the height calculation */
 }
 
 .card img {
     width: 100%;
-    transition: 0.5s ease-in-out;
+   
+    object-fit: cover; /* Scale the image to cover the card, might crop it */
+    
 }
 
 .card i {
@@ -577,10 +583,7 @@ align-items: center;
         text-align: center;
     }
     
-    .card img {
-        width: 100%;
-        transition: 0.5s ease-in-out;
-    }
+
     
     .card i {
         color: goldenrod;

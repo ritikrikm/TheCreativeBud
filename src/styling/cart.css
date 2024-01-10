@@ -4,7 +4,26 @@
     --light: #FFC2D1;
 }
 
-
+.product-photo-container {
+	width: 300px; /* Adjust the width as needed */
+	height: 300px; /* Adjust the height as needed */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden; /* This will clip the image if it's larger than the container */
+  }
+  
+  .product-photo-container img {
+	width: 100%;
+	height: 100%;
+	object-fit: contain; /* This makes sure the image is scaled correctly */
+  }
+  
+.photo-navigation {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 10px;
+  }
   
   .demo {
 	position: relative;

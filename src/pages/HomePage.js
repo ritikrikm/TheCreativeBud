@@ -43,7 +43,7 @@ function HomePage() {
   const [selectedProductDetails, setSelectedProductDetails] = useState({
     name: "",
     desc: "",
-    photo: "",
+    photo: [],
     price: "",
   });
   const [showModifyFields, setShowModifyFields] = useState(false);
@@ -52,9 +52,25 @@ function HomePage() {
   const [newProduct, setNewProduct] = useState({
     name: "",
     desc: "",
-    photo: "", // URL of the photo
+    photo: [], 
     price: "",
   });
+  useEffect(() => {
+    // Create the Tawk.to script element
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.async = true;
+    script.src = "https://embed.tawk.to/6598b43a0ff6374032bd1729/1hje8015m";
+    script.charset = "UTF-8";
+    script.setAttribute("crossorigin", "*");
+    // Append the script to the document body
+    document.body.appendChild(script);
+  
+    // Clean up by removing the script when the component unmounts
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []); 
   const navigate = useNavigate(); // Hook for navigation
   useEffect(() => {
     // Firebase Realtime Database
@@ -77,24 +93,26 @@ function HomePage() {
     });
   }, []);
   const storage = getStorage();
-  const handleFileUpload = async (file, productId) => {
-    if (!file) return null;
+  const handleFileUpload = async (files) => {
+    if (!files.length) return [];
 
-    const storageLocation = storageRef(storage, `product-photos/${productId}`);
-    try {
-      await uploadBytes(storageLocation, file);
-      console.log(
-        "Uploading file: ",
-        file.name,
-        " with product ID: ",
-        productId
-      );
-      return await getDownloadURL(storageLocation);
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      return null;
+    const uploadedUrls = [];
+
+    for (const file of files) {
+        const productId = Date.now().toString(); // Generate a unique ID for each product
+        const storageLocation = storageRef(storage, `product-photos/${productId}/${file.name}`);
+        
+        try {
+            await uploadBytes(storageLocation, file);
+            const url = await getDownloadURL(storageLocation);
+            uploadedUrls.push(url);
+        } catch (error) {
+            console.error("Error uploading file:", file.name, error);
+        }
     }
-  };
+
+    return uploadedUrls;
+};
 
   useEffect(() => {
     if (location.state?.fromProductDetail) {
@@ -181,70 +199,69 @@ function HomePage() {
 
   const handleDeleteProduct = async () => {
     if (!selectedProductId) return;
-
+  
     try {
       const database = getDatabase();
       const productRef = ref(database, `products/${selectedProductId}`);
+  
       // Retrieve the current product details
       const snapshot = await get(productRef);
       if (snapshot.exists()) {
         const productData = snapshot.val();
-
-        // If there's a photo URL, delete the photo from storage
-        if (productData.photo) {
-          const photoRef = storageRef(storage, productData.photo);
-          await deleteObject(photoRef).catch((error) =>
-            console.error("Error deleting photo:", error)
-          );
+  
+        // If there are photo URLs, delete each photo from storage
+        if (productData.photos && productData.photos.length > 0) {
+          for (const photoURL of productData.photos) {
+            const photoRef = storageRef(storage, photoURL);
+            await deleteObject(photoRef).catch((error) =>
+              console.error("Error deleting photo:", error)
+            );
+          }
         }
       }
       await remove(productRef);
-
-      // Optionally, add logic to handle UI changes after deletion
-
+  
+      alert("Deleted");
+  
       // Clear selected product details and close modal
-      setSelectedProductDetails({ name: "", desc: "", photo: "", price: "" });
+      setSelectedProductDetails({ name: "", desc: "", photos: [], price: "" });
       setShowModifyFields(false);
       setSelectedProductId(null);
-
+  
       // Show success message or refresh the product list
     } catch (error) {
       console.error("Error deleting product: ", error);
       // Handle error (e.g., show error message)
     }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const files = e.target.elements["productPhotos"].files;
 
-    const file = e.target.elements["productPhoto"].files[0];
+    const photoURLs = await handleFileUpload(files);
+
+    if (photoURLs.length === 0) {
+        console.error("Photo upload failed.");
+        return; // Exit if photo upload fails
+    }
 
     const database = getDatabase();
     const newProductRef = push(ref(database, "products"));
     const newProductId = newProductRef.key;
 
-    let photoURL = "null"; // Default to null if no file is selected
-
-    // Only attempt to upload if a file is selected
-    if (file) {
-        photoURL = await handleFileUpload(file, newProductId);
-        if (!photoURL) {
-            console.error("Photo upload failed.");
-            return; // Exit the function if the photo upload fails
-        }
-    }
-
-    // Create the new product with either the photo URL or null
     await set(newProductRef, {
         ...newProduct,
         id: newProductId,
-        photo: photoURL
+        photos: photoURLs
     });
 
     // Reset form and state after successful submission
-    setNewProduct({ name: "", desc: "", photo: "", price: "" });
+    setNewProduct({ name: "", desc: "", photos: [], price: "" });
     setShowModal(false);
 };
+
 
   const handleSaveChanges = async () => {
     if (!selectedProductId) return;
@@ -318,7 +335,13 @@ function HomePage() {
   return (
     <div>
       <Helmet>
+    
     <meta name="description" content="Discover unique and creative products at TheCreativeBud. Explore our latest collections of handcrafted items, perfect for adding a touch of creativity to your life." />
+    <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://thecreativebud.in/" />
+                <meta property="og:title" content="TheCreativeBud - Unique and Creative Products" />
+                <meta property="og:description" content="Explore our unique collections of handcrafted items, perfect for adding creativity to your life. Discover the latest trends and exclusive products at TheCreativeBud." />
+
 </Helmet>
       <div className="main-content-container">
         {" "}
@@ -371,27 +394,20 @@ function HomePage() {
           </div>
           <div className="card-container">
             {products.map((product) => (
-              <div
-                className="card"
-                key={product.id}
-                // onClick={() => navigate(`/product/${product.id}`)}
-                onClick={() => navigate(`/category/products/${product.id}`)}
-              >
-                <div>
-                  <img
-                    src={
-                      product.photo !== "null" ? product.photo : "./imgna.png"
-                    }
-                    alt={product.name}
-                  />
-                </div>
-                <h1>{product.name}</h1>
-                <p className="product-description">{product.desc}</p>
-                <p className="priceHP">{product.price} INR</p>
-               
-                
-              </div>
-            ))}
+        <div className="card" key={product.id} onClick={() => navigate(`/category/products/${product.id}`)}>
+ <div>
+                {product.photos && product.photos.length > 0 ? (
+                    <img src={product.photos[0]} alt={`Product ${product.name}`} />
+                ) : (
+                    <img src="./imgna.png" alt="No image available" />
+                )}
+            </div>
+            <h1>{product.name}</h1>
+            <p className="product-description">{product.desc}</p>
+            <p className="priceHP">{product.price} INR</p>
+        </div>
+    ))}
+
 
             {showModal && (
               <div className="modal-two">
@@ -414,7 +430,8 @@ function HomePage() {
                   <input
                     type="file"
                     accept="image/*"
-                    name="productPhoto"
+                    name="productPhotos"
+                    multiple
                     onChange={handleFileUpload}
                   />
                   <br />

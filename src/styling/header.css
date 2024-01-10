@@ -17,8 +17,16 @@ body {
     --secondary: #FFB3C6;
     --light: #FFC2D1;
 }
-
-
+.additionalFunction a{
+    display: flex !important; 
+    text-decoration: none !important;
+    color: black !important;
+    justify-content: center;
+}
+#phNumber, #mailTo{
+    text-decoration: none;
+    color: black;
+}
 header {
     width: 100%;
     height: auto !important;
@@ -192,6 +200,7 @@ header {
     display: flex;
     flex-direction: column;
     margin-top: 10px; /* Adjust as needed */
+    z-index: 100;
     /* Add more styling as needed */
   }
   

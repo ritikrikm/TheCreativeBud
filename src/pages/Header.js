@@ -7,8 +7,11 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  sendEmailVerification,
+  
 } from "firebase/auth";
 import { getDatabase, ref,get, set, onValue } from "firebase/database";
+import { fetchSignInMethodsForEmail } from "firebase/auth";
 
 import { signOut } from "firebase/auth";
 import "../styling/header.css";
@@ -18,6 +21,7 @@ import { UserContext } from "./UserContext";
 
 function Header() {
   const [searchInput, setSearchInput] = useState("");
+  const [openSearchOnHome, setOpenSearchOnHome] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const { cartItems } = useContext(CartContext);
   const isCartNotEmpty = cartItems.length > 0;
@@ -51,6 +55,50 @@ function Header() {
         setSearchResults([]);
       }
     }, [searchInput]); // useEffect will run on every change in searchInput
+    const isValidEmail = (email) => {
+      // Simple email validation regex
+      return /\S+@\S+\.\S+/.test(email);
+    };
+    const isValidPassword = (password) => {
+      // Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character
+      return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(password);
+    };
+    const handleVerifyEmail = () => {
+      const email = document.getElementById("login-email").value;
+      // Find the user by email in Firebase Auth
+      fetchSignInMethodsForEmail(auth,email)
+        .then((signInMethods) => {
+          if (signInMethods.length === 0) {
+            alert("No user found with this email. Please sign up first.");
+          } else {
+            // User exists, now check if email is verified in Firebase Database
+            const userRef = ref(database, `users/${signInMethods[0].uid}`);
+            get(userRef).then((snapshot) => {
+              if (snapshot.exists()) {
+                const userData = snapshot.val();
+                if (!userData.emailVerified) {
+                  // Send verification email
+                  sendEmailVerification(signInMethods[0])
+                    .then(() => {
+                      alert("Verification email has been sent to your email address.");
+                    })
+                    .catch((error) => {
+                      console.error("Error sending verification email:", error);
+                    });
+                } else {
+                  alert("Your email is already verified.");
+                }
+              } else {
+                alert("No user data found in database.");
+              }
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    };
+    
 
   // Logout function
   const handleLogout = () => {
@@ -71,7 +119,20 @@ function Header() {
         console.error("Error during logout:", error);
       });
   };
-
+  const handleFindClick = () => {
+    if (window.location.pathname === '/') {
+      setIsSearchBoxVisible(!isSearchBoxVisible);
+    } else {
+      setOpenSearchOnHome(true);
+      navigate("/");
+    }
+  };
+  useEffect(() => {
+    if (openSearchOnHome && window.location.pathname === '/') {
+      setIsSearchBoxVisible(true);
+      setOpenSearchOnHome(false); // Reset the state
+    }
+  }, [window.location.pathname, openSearchOnHome]);
   const resetStates = () => {
     setIsModalOpen(false);
     setRegisterFormVisible(false);
@@ -123,14 +184,24 @@ const handleSearchInputChange = (e) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Login successful
-
-        alert("Login successful!");
-        const uid = userCredential.user.uid;
-        const userRef = ref(database, "users/" + uid);
-        // setUserName(userCredential.user.displayName || 'User')
-        resetStates();
-        // You can redirect the user to another page or update the UI accordingly
+        if (!userCredential.user.emailVerified) {
+          alert("Please verify your email first.");
+          signOut(auth);
+          // Optionally, redirect them back to the login page or show an appropriate message
+        } 
+        else {
+          // Login successful
+          alert("Login successful!");
+          const uid = userCredential.user.uid;
+          const userRef = ref(database, "users/" + uid);
+          resetStates();
+        
+         
+          
+        }
       })
+    
+     
       .catch((error) => {
         alert("Error during login: " + error.message);
         // Handle errors here, such as showing a message to the user
@@ -174,36 +245,53 @@ const handleSearchInputChange = (e) => {
     const name = document.getElementById("name").value;
     const email = document.getElementById("signup-email").value;
     const password = document.getElementById("signup-password").value;
-
+  
+    if (!isValidEmail(email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+  
+    if (!isValidPassword(password)) {
+      alert("Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character and atleast 8 characters long.");
+      return;
+    }
+  
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Define a reference to the user data in the Realtime Database
+        // Send verification email
+       sendEmailVerification( userCredential.user)
+          .then(() => {
+            alert("Verification email sent. Please check your email.");
+            resetStates();
+          // Redirect to login page or change state to show login
+          // For example, you can change the modal state to show login form
+          setIsModalOpen(true);
+          setRegisterFormVisible(false);
+          })
+          .catch((error) => {
+            console.error("Error sending verification email:", error);
+          });
+  
+        // Optionally save some user data immediately, but consider waiting for email verification for full activation
         const uid = userCredential.user.uid;
         const userRef = ref(database, "users/" + uid);
-
-        // Set the user data at the defined reference
         set(userRef, {
           name: name,
           email: email,
-          password: password,
+          // Do not save password to database
+          password,password,
           uid: uid,
-        })
-          .then(() => {
-            alert("User created and data saved successfully!");
-            document.getElementById("name").value = "";
-            document.getElementById("signup-email").value = "";
-            document.getElementById("signup-password").value = "";
-
-            resetStates();
-          })
-          .catch((error) => {
-            alert("Error saving user data: " + error.message);
-          });
+          emailVerified: false
+        });
+  
+        resetStates();
       })
       .catch((error) => {
         alert("Error creating user: " + error.message);
       });
   };
+
+  
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -281,13 +369,18 @@ const handleSearchInputChange = (e) => {
                 <h1>Sign In</h1>
                 <p>or use your email account:</p>
                 <form id="login-form" onSubmit={handleLogin}>
-                  <input type="email" id="login-email" placeholder="Email" />
+                  <input type="email" id="login-email" placeholder="Email" required/>
                   <input
                     type="password"
                     id="login-password"
-                    placeholder="Password"
+                    placeholder="Password)"
+                    required
                   />
-                  {/* <a href="#">Forgot your password?</a> */}
+                  <div className='additionalFunction'>
+                  {/* <a href="#" onClick={handleVerifyEmail}>Verify Email</a>
+                  <a href="#">Forgot your password?</a> */}
+                  </div>
+                   
                   <button type="submit">SIGN IN</button>
                 </form>
               </div>
@@ -324,11 +417,13 @@ const handleSearchInputChange = (e) => {
                         type="email"
                         id="signup-email"
                         placeholder="Email"
+                        required
                       />
                       <input
                         type="password"
                         id="signup-password"
-                        placeholder="Password"
+                        placeholder="Password  (e.g., Website@123)"
+                        required
                       />
                       <button type="submit">REGISTER</button>
                     </form>
@@ -343,10 +438,10 @@ const handleSearchInputChange = (e) => {
           <a href="https://www.instagram.com/thecreativebud/" target="_blank">
             <i className="fa fa-instagram" />
           </a>
-          <a href="https://www.instagram.com/thecreativebud/" target="_blank">
+          <a href="https://wa.me/918750727401?text=Hello%20there!" target="_blank">
             <i className="fa fa-whatsapp" />
           </a>
-          <a href="https://www.instagram.com/thecreativebud/" target="_blank">
+          <a href="https://www.behance.net/ThePrernaSharma" target="_blank">
             <i className="fa fa-behance" />
           </a>
           <Link to="/cart" className="cart-icon">
@@ -360,12 +455,14 @@ const handleSearchInputChange = (e) => {
       {/* nav2 start */}
       <nav className="nav2">
         <div className="nav2-left">
-          <i className="fa fa-phone" /> +91 8750727401
-          <i className="fa fa-envelope" /> thecreativebud@gmail.com
+        <a id="phNumber" href="tel:+918750727401" ><i className="fa fa-phone" /> +91 8750727401</a>
+
+        <a id="mailTo" href="mailto:thecreativebud@gmail.com" ><i className="fa fa-envelope" /> thecreativebud@gmail.com</a>
+
         </div>
         <div className="nav2-center">
           <h1>
-            Prerna <span>Sharma</span>
+            The<span>CreativeBud</span>
           </h1>
           <p>One stop destination for all your creative needs</p>
         </div>
@@ -438,13 +535,10 @@ const handleSearchInputChange = (e) => {
             </li>
           )}
           <li>
-            <a
-              href="#"
-              onClick={() => setIsSearchBoxVisible(!isSearchBoxVisible)}
-            >
-              <i className="fa fa-search" />
-              Find
-            </a>
+          <a href="#" onClick={handleFindClick}>
+  <i className="fa fa-search" />
+  Find
+</a>
           </li>
           {isSearchBoxVisible && (
         <div className="search-container">
@@ -458,40 +552,7 @@ const handleSearchInputChange = (e) => {
     
         </div>
       )}
-          {/* <div
-            id="searchBox"
-            style={{ display: isSearchBoxVisible ? "flex" : "none" }}
-            >
-            <input
-              type="text"
-              id="searchInput"
-              placeholder="Search..."
-              onChange={handleSearchInputChange}
-              value={searchInput}
-            />
-            <button id="sBtn" onClick={handleSearch}>
-              <i className="fa fa-search" />
-            </button>
-            <div className="sr-main">
-              {searchResults.length > 0 && (
-                <div className="search-results-dropdown">
-                  {searchResults.map((product, index) => (
-                    <div
-                      key={index}
-                      className="search-result-item"
-                      onClick={() =>
-                        navigate(
-                          `/category/${product.collection}/${product.id}`
-                        )
-                      }
-                    >
-                      {product.name} ({product.collection})
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div> */}
+        
         </ul>
     
 
@@ -523,35 +584,25 @@ const handleSearchInputChange = (e) => {
       <section id="sidenav" style={{ width: sidenavWidth }}>
         <ul>
           <li>
-            <a href="#">
-              <i className="fa fa-home" />
-              Home
-            </a>
+          <Link to="/" onClick={() => setSidenavWidth("0px")}>
+        <i className="fa fa-home" />
+        Home
+      </Link>
           </li>
           <li>
-            <a href="#">
-              <i className="fa fa-user" />
-              Boy
-            </a>
+          <Link to="/stationary" onClick={() => setSidenavWidth("0px")}>
+        <i className="fa fa-pencil" />
+        Stationary
+      </Link>
           </li>
           <li>
-            <a href="#">
-              <i className="fa fa-users" />
-              Accessories
-            </a>
+          <Link to="/spcloffer" onClick={() => setSidenavWidth("0px")}>
+        <i className="fa fa-calendar-check-o" />
+        Special Offers
+      </Link>
           </li>
-          <li>
-            <a href="#">
-              <i className="fa fa-calendar-check-o" />
-              Special Offers
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i className="fa fa-search" />
-              Find
-            </a>
-          </li>
+        
+        
           <li>
             <a href="#">
               <i className="fa fa-anchor" />
@@ -559,29 +610,29 @@ const handleSearchInputChange = (e) => {
             </a>
             <ul>
               <li>
-                <a href="#">
-                  <i className="fa fa-clipboard" />
-                  Earrings
-                </a>
+              <Link to="/accessories/earrings" onClick={() => setSidenavWidth("0px")}>
+        <i className="fa fa-clipboard" />
+        Earrings
+      </Link>
               </li>
               <li>
-                <a href="#">
-                  <i className="fa fa-circle-o" />
-                  Pendants
-                </a>
+              <Link to="/accessories/pendants" onClick={() => setSidenavWidth("0px")}>
+        <i className="fa fa-circle-o" />
+        Pendants
+      </Link>
               </li>
               <li>
-                <a href="#">
-                  <i className="fa fa-gavel" />
-                  Keychain
-                </a>
+              <Link to="/accessories/keychains" onClick={() => setSidenavWidth("0px")}>
+        <i className="fa fa-gavel" />
+        Keychain
+      </Link>
               </li>
             </ul>
           </li>
         </ul>
       </section>
       <i
-        className="fa fa-anchor"
+        className="fa fa-heart"
         id="menubar"
         onClick={() =>
           setSidenavWidth(sidenavWidth === "0px" ? "250px" : "0px")
